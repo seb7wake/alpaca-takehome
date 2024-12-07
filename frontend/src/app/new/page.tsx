@@ -18,11 +18,12 @@ const CreateNote = () => {
 
   const onSubmit = async (data: FieldValues) => {
     const cleanData = {
-      ...data,
+      title: data.title,
       patient_name: data.patientName,
       start_date: data.startDateTime,
       end_date: data.endDateTime,
       ai_summary: data.aiSummary,
+      notes: data.notes,
     };
     const response = await postFetcher("sessions/create", cleanData);
 
@@ -34,24 +35,37 @@ const CreateNote = () => {
   };
 
   const generateSummary = async () => {
-    if (!watch("notes")) {
+    if (
+      !watch("notes") ||
+      !watch("patientName") ||
+      !watch("startDateTime") ||
+      !watch("endDateTime")
+    ) {
       // toast.error("Please enter notes before generating a summary");
       return;
     }
     setLoadingSummary(true);
-    const data = await postFetcher("sessions/generate_summary", {
-      notes: watch("notes"),
-    });
-    if (data.summary) {
-      setValue("aiSummary", data.summary);
-    } else {
-      // toast.error("Failed to generate summary");
+    try {
+      const data = await postFetcher("sessions/generate_summary", {
+        notes: watch("notes"),
+        patient_name: watch("patientName"),
+        start_date: watch("startDateTime"),
+        end_date: watch("endDateTime"),
+      });
+      if (data?.summary) {
+        setValue("aiSummary", data.summary);
+      } else {
+        // toast.error("Failed to generate summary");
+      }
+    } catch (error) {
+      console.error(error);
+    } finally {
+      setLoadingSummary(false);
     }
-    setLoadingSummary(false);
   };
 
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div className="min-h-screen bg-gray-50 mb-10">
       <Header />
       <div className="max-w-2xl mx-auto p-4 mt-8">
         <h1 className="text-2xl font-bold mb-6">Create Note</h1>

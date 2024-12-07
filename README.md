@@ -1,79 +1,46 @@
 # Alpaca Health Software Engineering Take-Home Project
 
-### Project Description
+### Approach
 
-Visit this link for details:
-[https://harviio.notion.site/Alpaca-Health-Eng-Take-home-Project-1411bfc50b90803382d4cae01f9bcf18?pvs=4](https://www.notion.so/harviio/ABA-Session-Note-Generator-Take-Home-Project-1411bfc50b90803382d4cae01f9bcf18?pvs=4)
+#### Views
 
-## Setup Instructions
+I built this project as a simple CRUD app with views for:
 
-### Backend Setup (Python 3.11+ required)
+- All notes
+- Creating a note
+- Updating and viewing a note
 
-```bash
-# Create and activate virtual environment
-python -m venv alpaca_venv
-source alpaca_venv/bin/activate  # or `venv\Scripts\activate` on Windows
+#### User Flow
 
-# Install dependencies
-pip install -r requirements.txt
+The user is able to input their information, generate the AI clinical notes, and then update them on the spot. Moreover, the clinician is able to come back later and update the notes as needed.
 
-# Start the server
-fastapi dev main.py
-```
+#### Authentication
 
-### Frontend Setup (Node.js 18+ required)
+I avoided any concept of user state management to allow myself to move quickly and focus on the core functionality instead of auth.
 
-```bash
-# Navigate to frontend directory
-cd frontend
+#### Future Improvements
 
-# Install dependencies
-npm install
+Although I wanted to add a rich text editor like React Quill, there wasn't enough time to do so.
 
-# Start the development server
-npm run dev
-```
+#### Technology Choices
 
-The application will be available at:
+I chose to use Tortoise ORM as my ORM. I haven't used this previously, but based on my research, it works very well with FastAPI and has a smooth integration without much set up.
 
-- Frontend: http://localhost:3000
-- Backend API: http://localhost:8000
-- API Documentation: http://localhost:8000/docs
+It was very tempting to use a component library like Shadcn or React Bootstrap, but I stuck with straight Tailwind for speedy updates to design if needed.
 
-## Default Project Structure
+### Design decisions
 
-- `frontend/`: Next.js application
-  - `src/components/`: Reusable React components
-  - `src/app/`: Next.js app router pages
-- `backend/`: FastAPI application
-  - `app/main.py`: API endpoints
+- Kept the styling minimalistic to not distract from the core functionality.
+- Used a simple color palette to make the app feel more modern.
+- Added a loading state to the generate summary button.
+- Added loading state on the home page while sessions are being fetched.
+- I did want to add toasts for success and error messages, but ran out of time. You can see where I commented it out in the frontend code.
 
-## Development
+### Assumptions
 
-- Frontend runs on port 3000 with hot reload enabled
-- Backend runs on port 8000 with auto-reload enabled
-- API documentation available at http://localhost:8000/docs
+- The AI summary should follow a specific template to be compliant. I created this myself using what I could gather online.
+- There will only be one user and the functionality for multiple user profiles is irrelevant for this project.
 
-## Submission
+### Running the project
 
-1. Create a private GitHub repository
-2. Implement your solution
-3. Document any assumptions or trade-offs
-4. Include instructions for running your solution
-5. Send us the repository link
-
-## Time Expectation
-
-- Expected time: 3-4 hours
-- Please don't spend more than 6 hours
-
-## Evaluation Criteria
-
-| Category | Details | Weight |
-|----------|---------|--------|
-| Product sense and scoping | - Final product decisions alignment with requirements<br>- Appropriate deprioritization of non-crucial parts | 10% |
-| Technology selection | - Right tools chosen for the job | 10% |
-| Technical Level | - Well-organized and intuitive code structure<br>- Modular code (e.g., React components used)<br>- Proper use of React hooks<br>- Good state management<br>- Correct use of useEffect hooks | 40% |
-| Craft and Quality | - Usable and intuitive UI/UX<br>- Presence and severity of bugs | 20% |
-| Documentation | - Clear communication of logic and technical decisions in README | 10% |
-| Testing | - Presence of tests<br>- Quality and robustness of tests | 10% |
+You won't be able to run the project as is because I removed the API key from the `.env` file.

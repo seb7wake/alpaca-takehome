@@ -3,6 +3,7 @@ import Header from "@/components/Header";
 import React, { useEffect, useState } from "react";
 import { FieldValues, useForm } from "react-hook-form";
 import { useRouter, useParams } from "next/navigation";
+import { postFetcher, fetcher } from "@/utils/fetcher";
 
 const CreateNote = () => {
   const {
@@ -18,23 +19,22 @@ const CreateNote = () => {
   useEffect(() => {
     if (id) {
       const fetchSession = async () => {
-        const response = await fetch(
-          `${process.env.NEXT_PUBLIC_API_URL}/sessions/${id}`
-        );
-        const data = await response.json();
-        if (data.session) {
-          setValue("title", data.session.title);
-          setValue("patientName", data.session.patient_name);
-          setValue(
-            "startDateTime",
-            new Date(data.session.start_date).toISOString().slice(0, 16)
-          );
-          setValue(
-            "endDateTime",
-            new Date(data.session.end_date).toISOString().slice(0, 16)
-          );
-          setValue("notes", data.session.notes);
-          setValue("aiSummary", data.session.ai_summary);
+        const data = await fetcher(`sessions/${id}`);
+        const session = data.session;
+        if (session) {
+          const formFields = {
+            title: session.title,
+            patientName: session.patient_name,
+            startDateTime: new Date(session.start_date)
+              .toISOString()
+              .slice(0, 16),
+            endDateTime: new Date(session.end_date).toISOString().slice(0, 16),
+            notes: session.notes,
+            aiSummary: session.ai_summary,
+          };
+          Object.entries(formFields).forEach(([field, value]) => {
+            setValue(field, value);
+          });
         } else {
           // toast.error("Failed to fetch session");
           router.push("/");
@@ -52,19 +52,7 @@ const CreateNote = () => {
       end_date: data.endDateTime,
       ai_summary: data.aiSummary,
     };
-    const response = await fetch(
-      `${process.env.NEXT_PUBLIC_API_URL}/sessions/${id}`,
-      {
-        method: "PUT",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(cleanData),
-      }
-    );
-
-    const responseData = await response.json();
-    console.log(responseData);
+    const responseData = await postFetcher(`sessions/${id}`, cleanData, "PUT");
 
     if (responseData.session) {
       router.push(`/`);
@@ -79,17 +67,12 @@ const CreateNote = () => {
       return;
     }
     setLoadingSummary(true);
-    const response = await fetch(
-      `${process.env.NEXT_PUBLIC_API_URL}/sessions/generate_summary`,
-      {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ notes: watch("notes") }),
-      }
-    );
-    const data = await response.json();
+    const data = await postFetcher("sessions/generate_summary", {
+      notes: watch("notes"),
+      patient_name: watch("patientName"),
+      start_date: watch("startDateTime"),
+      end_date: watch("endDateTime"),
+    });
     if (data.summary) {
       setValue("aiSummary", data.summary);
     } else {
@@ -99,7 +82,7 @@ const CreateNote = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div className="min-h-screen bg-gray-50 mb-10">
       <Header />
       <div className="max-w-2xl mx-auto p-4 mt-8">
         <h1 className="text-2xl font-bold mb-6">Edit Note</h1>

@@ -1,6 +1,6 @@
 from app.models import Session
 import os
-from services.openai_client import OpenAIClient
+from app.services.openai_client import OpenAIClient
 
 class GenerateSummary:
     def __init__(self, notes: str, patient_name: str, start_date: str, end_date: str):

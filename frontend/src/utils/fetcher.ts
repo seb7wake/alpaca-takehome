@@ -3,9 +3,13 @@ export const fetcher = (route: string) =>
     res.json()
   );
 
-export const postFetcher = (route: string, data: any) =>
+export const postFetcher = (
+  route: string,
+  data: any,
+  method: "POST" | "PUT" = "POST"
+) =>
   fetch(`${process.env.NEXT_PUBLIC_API_URL}/${route}`, {
-    method: "POST",
+    method: method,
     headers: {
       "Content-Type": "application/json",
     },
