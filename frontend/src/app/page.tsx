@@ -8,14 +8,16 @@ import { FaPlus } from "react-icons/fa6";
 import Spinner from "@/components/Spinner";
 import Error from "@/components/form/Error";
 import { useRouter } from "next/navigation";
+import Empty from "@/components/Empty";
 
 export default function Home() {
   const { data, error } = useSWR("sessions", fetcher);
   const router = useRouter();
-  console.log("data", data);
 
   if (error) return <Error error={error} />;
   if (!data) return <Spinner />;
+
+  if (data.sessions.length === 0) return <Empty />;
 
   return (
     <div>
