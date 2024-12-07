@@ -30,7 +30,7 @@ const CreateNote = () => {
     if (response.session) {
       router.push(`/`);
     } else {
-      // toast.error("Failed to create session. Please try again.");
+      // error toast
     }
   };
 
@@ -41,7 +41,7 @@ const CreateNote = () => {
       !watch("startDateTime") ||
       !watch("endDateTime")
     ) {
-      // toast.error("Please enter notes before generating a summary");
+      // error toast
       return;
     }
     setLoadingSummary(true);
@@ -55,7 +55,7 @@ const CreateNote = () => {
       if (data?.summary) {
         setValue("aiSummary", data.summary);
       } else {
-        // toast.error("Failed to generate summary");
+        // error toast
       }
     } catch (error) {
       console.error(error);

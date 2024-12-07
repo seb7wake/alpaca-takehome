@@ -16,33 +16,33 @@ const CreateNote = () => {
   const router = useRouter();
   const { id } = useParams();
   const [loadingSummary, setLoadingSummary] = useState(false);
+
   useEffect(() => {
     if (id) {
-      const fetchSession = async () => {
-        const data = await fetcher(`sessions/${id}`);
-        const session = data.session;
-        if (session) {
-          const formFields = {
-            title: session.title,
-            patientName: session.patient_name,
-            startDateTime: new Date(session.start_date)
-              .toISOString()
-              .slice(0, 16),
-            endDateTime: new Date(session.end_date).toISOString().slice(0, 16),
-            notes: session.notes,
-            aiSummary: session.ai_summary,
-          };
-          Object.entries(formFields).forEach(([field, value]) => {
-            setValue(field, value);
-          });
-        } else {
-          // toast.error("Failed to fetch session");
-          router.push("/");
-        }
-      };
       fetchSession();
     }
   }, [id]);
+
+  const fetchSession = async () => {
+    const data = await fetcher(`sessions/${id}`);
+    const session = data.session;
+    if (session) {
+      const formFields = {
+        title: session.title,
+        patientName: session.patient_name,
+        startDateTime: new Date(session.start_date).toISOString().slice(0, 16),
+        endDateTime: new Date(session.end_date).toISOString().slice(0, 16),
+        notes: session.notes,
+        aiSummary: session.ai_summary,
+      };
+      Object.entries(formFields).forEach(([field, value]) => {
+        setValue(field, value);
+      });
+    } else {
+      // error toast
+      router.push("/");
+    }
+  };
 
   const onSubmit = async (data: FieldValues) => {
     const cleanData = {
@@ -57,13 +57,13 @@ const CreateNote = () => {
     if (responseData.session) {
       router.push(`/`);
     } else {
-      // toast.error("Failed to create session. Please try again.");
+      // error toast
     }
   };
 
   const generateSummary = async () => {
     if (!watch("notes")) {
-      // toast.error("Please enter notes before generating a summary");
+      // error toast
       return;
     }
     setLoadingSummary(true);
@@ -76,7 +76,7 @@ const CreateNote = () => {
     if (data.summary) {
       setValue("aiSummary", data.summary);
     } else {
-      // toast.error("Failed to generate summary");
+      // error toast
     }
     setLoadingSummary(false);
   };

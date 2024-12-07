@@ -24,7 +24,7 @@ export default function Home() {
       <Header />
       <div className="max-w-6xl mx-auto p-4 mt-8">
         <div className="flex justify-between items-center mb-4">
-          <h1 className="text-2xl font-bold">Notes</h1>
+          <h1 className="text-2xl font-bold">Clinical notes</h1>
           <button
             className="px-3 py-2 bg-indigo-600 text-white rounded-full hover:bg-indigo-700 transition-colors flex items-center gap-2"
             onClick={() => {
@@ -32,7 +32,7 @@ export default function Home() {
             }}
           >
             <FaPlus />
-            Add Note
+            Add note
           </button>
         </div>
         <div className="space-y-4">
