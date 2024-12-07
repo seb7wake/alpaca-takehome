@@ -5,3 +5,7 @@ python-dotenv
 openai
 aiosqlite
 python-dotenv
+pytest-mock
+pytest
+pytest-asyncio
+httpx
