@@ -1,1 +1,7 @@
 fastapi==0.109.0
+tortoise-orm
+uvicorn
+python-dotenv
+openai
+aiosqlite
+python-dotenv
