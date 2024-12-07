@@ -21,7 +21,7 @@ class SessionRequest(BaseModel):
 
 @router.get("/")
 async def get_sessions():
-    sessions = await Session.all()
+    sessions = await Session.all().order_by('-start_date')
     print(sessions)
     return {"sessions": sessions}
 
